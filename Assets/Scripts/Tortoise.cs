@@ -9,6 +9,7 @@ public class Tortoise : MonoBehaviour
 
     public float speed;
     public bool isWalking, isHiding;
+    bool isGrounded;
 
     public Rigidbody2D rb;
     private Vector2 yeetDirection, target;
@@ -16,9 +17,14 @@ public class Tortoise : MonoBehaviour
 
     bool draggingTortoise = false;
     public SpriteRenderer dragPoint;
-
+    public Transform groundCheck;
     public Image juiceIndicator;
+
+
     
+    LayerMask groundLayer, tortoiseLayer;
+    int groundLayerInt;
+    RaycastHit2D hit;
 
     private void Awake()
     {
@@ -27,11 +33,20 @@ public class Tortoise : MonoBehaviour
         yeetJuice = 0f;
         yeetJuiceMax = 100f;
         yeetJuiceRecharge = 20f; // per second
+        groundLayer = LayerMask.GetMask("Ground");
+        groundLayerInt = LayerMask.NameToLayer("Ground");
+        tortoiseLayer = gameObject.layer;
+
     }
 
     void Update()
     {
+        hit = Physics2D.Raycast(groundCheck.position, -transform.up, 0.7f, groundLayer);
 
+        //Debug.DrawRay(groundCheck.position, -transform.up, Color.red, 0.1f);
+
+        isGrounded = (hit.collider != null) && (hit.collider.gameObject.layer == groundLayerInt);
+        if (isGrounded == isHiding) isHiding = !isHiding;
         animator.SetFloat("speed", speed);
         animator.SetBool("isWalking", isWalking);
         animator.SetBool("isHiding", isHiding);
@@ -39,10 +54,9 @@ public class Tortoise : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            RaycastHit2D hit = Physics2D.Raycast(target, Vector2.zero);
+            hit = Physics2D.Raycast(target, Vector2.zero);
             if (hit.collider != null && hit.collider.attachedRigidbody == rb)
             {
-
                 ToggleDragging(true);
                 dragPoint.transform.position = hit.point;
             }
@@ -50,7 +64,6 @@ public class Tortoise : MonoBehaviour
 
         if (yeetJuice < 1f || Input.GetMouseButtonUp(0))
         {
-
             ToggleDragging(false);
         }
 
