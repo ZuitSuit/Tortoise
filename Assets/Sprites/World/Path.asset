@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: af7181f404f1447c0a7a17b3070b952b, type: 3}
-  m_Name: New SpriteShapeProfile
+  m_Name: Path
   m_EditorClassIdentifier: 
   m_Angles:
-  - m_Start: -45
-    m_End: 45
-    m_Order: 4
+  - m_Start: -180
+    m_End: 180
+    m_Order: 0
     m_Sprites:
-    - {fileID: -2677331292077858761, guid: de0a7714543f8d6408854d3b659d5b30, type: 3}
-  m_FillTexture: {fileID: 2800000, guid: 6fe6877e50807cf45a24dcc45f299aa2, type: 3}
+    - {fileID: 21300000, guid: 53f2c57c7d7edb1459185e8a0576d24c, type: 3}
+  m_FillTexture: {fileID: 0}
   m_CornerSprites:
   - m_CornerType: 0
     m_Sprites:
@@ -45,4 +45,4 @@ MonoBehaviour:
     m_Sprites:
     - {fileID: 0}
   m_FillOffset: 0
-  m_UseSpriteBorders: 0
+  m_UseSpriteBorders: 1

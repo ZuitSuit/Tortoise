@@ -30,7 +30,7 @@ public class Tortoise : MonoBehaviour
     private void Awake()
     {
         if(rb == null) rb = GetComponentInChildren<Rigidbody2D>();
-        yeetForce = 3000f;
+        yeetForce = 2000f;
         yeetJuice = 0f;
         yeetJuiceMax = 100f;
         yeetJuiceRecharge = 20f; // per second
@@ -73,6 +73,13 @@ public class Tortoise : MonoBehaviour
             ToggleDragging(false);
         }
 
+
+
+        juiceIndicator.fillAmount = yeetJuice / yeetJuiceMax;
+    }
+
+    private void FixedUpdate()
+    {
         if (draggingTortoise)
         {
             yeetJuice = Mathf.Clamp(yeetJuice - Time.deltaTime * 200f, 0f, 100f); //drain juice
@@ -85,8 +92,6 @@ public class Tortoise : MonoBehaviour
         {
             yeetJuice = Mathf.Clamp(yeetJuice += Time.deltaTime * yeetJuiceRecharge, 0f, 100f);
         }
-
-        juiceIndicator.fillAmount = yeetJuice / yeetJuiceMax;
     }
 
     public void ToggleDragging(bool toggle)
