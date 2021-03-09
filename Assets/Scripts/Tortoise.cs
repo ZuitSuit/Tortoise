@@ -10,6 +10,7 @@ public class Tortoise : MonoBehaviour
     public float speed;
     public bool isWalking, isHiding;
     bool isGrounded;
+    float groundedTime;
 
     public Rigidbody2D rb;
     private Vector2 yeetDirection, target;
@@ -37,16 +38,21 @@ public class Tortoise : MonoBehaviour
         groundLayerInt = LayerMask.NameToLayer("Ground");
         tortoiseLayer = gameObject.layer;
 
+        groundedTime = 0f;
+
     }
 
     void Update()
     {
-        hit = Physics2D.Raycast(groundCheck.position, -transform.up, 0.7f, groundLayer);
+        hit = Physics2D.Raycast(groundCheck.position, -transform.up, 0.3f, groundLayer);
 
         //Debug.DrawRay(groundCheck.position, -transform.up, Color.red, 0.1f);
 
         isGrounded = (hit.collider != null) && (hit.collider.gameObject.layer == groundLayerInt);
-        if (isGrounded == isHiding) isHiding = !isHiding;
+
+        groundedTime = (isGrounded ? groundedTime + Time.deltaTime: 0f);
+        isHiding = !(isGrounded && (groundedTime > 2f));
+
         animator.SetFloat("speed", speed);
         animator.SetBool("isWalking", isWalking);
         animator.SetBool("isHiding", isHiding);
