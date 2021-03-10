@@ -56,12 +56,18 @@ public class Tortoise : MonoBehaviour
                     Debug.Log(speed);
                 }*/
 
-        speed = Mathf.Clamp(speed - Time.deltaTime * (6f + 25f * speed/maxSpeed), 0f, maxSpeed);
+        speed = Mathf.Clamp(speed - Time.deltaTime * (6f + 30f * speed/maxSpeed), 0f, maxSpeed);
 
         //spam space to move
-        if (!isHiding && (Input.GetKeyDown(KeyCode.Space)) )
+        if (!isHiding)
         {
-            speed = Mathf.Clamp(speed + 7f, 0f, maxSpeed);
+            if ((Input.GetKeyDown(KeyCode.Space)))
+            {
+                speed = Mathf.Clamp(speed + 7f, 0f, maxSpeed);
+            }
+
+            
+            rb.AddForceAtPosition(groundCheck.right * speed / 80f, groundCheck.position);
         }
 
         hit = Physics2D.Raycast(groundCheck.position, -transform.up, 0.3f, groundLayer);
@@ -69,16 +75,16 @@ public class Tortoise : MonoBehaviour
 
         groundedTime = (isGrounded ? groundedTime + Time.deltaTime: 0f);
 
-        
-
-        isHiding = !(isGrounded && (groundedTime > 2f));
+        isHiding = !(isGrounded && (groundedTime > 1f));
+        isWalking = speed > 0;
 
         if (isHiding != wasHiding)
         {
+            //reset speed when hiding/unhiding
             speed = 0f;
         }
 
-        animator.SetFloat("speed", speed);
+        animator.SetFloat("speed", Mathf.InverseLerp(.2f, 1f, (speed / maxSpeed))); //animation speed based on speed
         animator.SetBool("isWalking", isWalking);
         animator.SetBool("isHiding", isHiding);
         target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
