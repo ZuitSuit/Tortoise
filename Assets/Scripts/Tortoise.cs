@@ -8,6 +8,7 @@ public class Tortoise : MonoBehaviour
     public Animator animator;
 
     public bool isWalking, isHiding;
+    bool wasHiding = false;
     bool isGrounded;
     float groundedTime;
 
@@ -16,8 +17,6 @@ public class Tortoise : MonoBehaviour
     float yeetForce, yeetJuice, yeetJuiceMax, yeetJuiceRecharge;
 
     float speed, maxSpeed;
-    float axis;
-    float lastAxis = 0f;
 
     bool draggingTortoise = false;
     public SpriteRenderer dragPoint;
@@ -27,7 +26,7 @@ public class Tortoise : MonoBehaviour
     public Color maxGrassColor, noGrassColor, maxSpeedColor, noSpeedColor;
 
     
-    LayerMask groundLayer, tortoiseLayer;
+    LayerMask groundLayer;
     int groundLayerInt;
     RaycastHit2D hit;
 
@@ -35,12 +34,11 @@ public class Tortoise : MonoBehaviour
     {
         if(rb == null) rb = GetComponentInChildren<Rigidbody2D>();
         yeetForce = 350f;
-        yeetJuice = 0f;
-        yeetJuiceMax = 100f;
+        yeetJuice = speed = 0f;
+        yeetJuiceMax = maxSpeed = 100f;
         yeetJuiceRecharge = 20f; // per second
         groundLayer = LayerMask.GetMask("Ground");
         groundLayerInt = LayerMask.NameToLayer("Ground");
-        tortoiseLayer = gameObject.layer;
 
         groundedTime = 0f;
 
@@ -50,20 +48,35 @@ public class Tortoise : MonoBehaviour
     {
 
         //spam left right to move
-        axis = Input.GetAxis("Horizontal");
-        if ((axis != 0) && (axis != lastAxis))
+        /*        axis = Input.GetButtonDown("Horizontal") ? Mathf.Sign(Input.GetAxis("Horizontal")) : 0;
+                if (!isHiding && (axis != 0) && (axis != lastAxis))
+                {
+                    lastAxis = axis;
+                    speed = Mathf.Clamp(speed + 5f, 0f, 100f);
+                    Debug.Log(speed);
+                }*/
+
+        speed = Mathf.Clamp(speed - Time.deltaTime * (6f + 25f * speed/maxSpeed), 0f, maxSpeed);
+
+        //spam space to move
+        if (!isHiding && (Input.GetKeyDown(KeyCode.Space)) )
         {
-            lastAxis = axis;
-            speed = Mathf.Clamp(speed + 5f, 0f, 100f);
+            speed = Mathf.Clamp(speed + 7f, 0f, maxSpeed);
         }
 
-
         hit = Physics2D.Raycast(groundCheck.position, -transform.up, 0.3f, groundLayer);
-
         isGrounded = (hit.collider != null) && (hit.collider.gameObject.layer == groundLayerInt);
 
         groundedTime = (isGrounded ? groundedTime + Time.deltaTime: 0f);
+
+        
+
         isHiding = !(isGrounded && (groundedTime > 2f));
+
+        if (isHiding != wasHiding)
+        {
+            speed = 0f;
+        }
 
         animator.SetFloat("speed", speed);
         animator.SetBool("isWalking", isWalking);
@@ -85,15 +98,20 @@ public class Tortoise : MonoBehaviour
             ToggleDragging(false);
         }
 
+        wasHiding = isHiding;
+
         juiceIndicator.fillAmount = (yeetJuice / yeetJuiceMax);
         juiceIndicator.color = Color.Lerp(noGrassColor, maxGrassColor, (yeetJuice / yeetJuiceMax));
+        speedIndicator.fillAmount = (speed / maxSpeed);
+        speedIndicator.color = Color.Lerp(noSpeedColor, maxSpeedColor, (speed / maxSpeed));
+
     }
 
     private void FixedUpdate()
     {
         if (draggingTortoise)
         {
-            yeetJuice = Mathf.Clamp(yeetJuice - Time.deltaTime * 200f, 0f, 100f); //drain juice
+            yeetJuice = Mathf.Clamp(yeetJuice - Time.deltaTime * 200f, 0f, yeetJuiceMax); //drain juice
 
             yeetDirection = (target - (Vector2)transform.position).normalized;
             rb.AddForceAtPosition(yeetDirection * Time.deltaTime * yeetForce * Mathf.Clamp(0f,4f,Vector2.Distance(transform.position, target)), dragPoint.transform.position);
@@ -102,7 +120,7 @@ public class Tortoise : MonoBehaviour
         }
         else
         {
-            yeetJuice = Mathf.Clamp(yeetJuice += Time.deltaTime * yeetJuiceRecharge, 0f, 100f);
+            yeetJuice = Mathf.Clamp(yeetJuice += Time.deltaTime * yeetJuiceRecharge, 0f, yeetJuiceMax);
         }
     }
 
