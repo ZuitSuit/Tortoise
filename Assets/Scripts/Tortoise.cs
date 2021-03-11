@@ -21,6 +21,9 @@ public class Tortoise : MonoBehaviour
     bool draggingTortoise = false;
     public SpriteRenderer dragPoint;
     public Transform groundCheck;
+    public ParticleSystem dustTrail, dustExplosion;
+    ParticleSystem.EmissionModule trailEmission;
+
     public Image juiceIndicator, speedIndicator;
 
     public Color maxGrassColor, noGrassColor, maxSpeedColor, noSpeedColor;
@@ -29,6 +32,7 @@ public class Tortoise : MonoBehaviour
     LayerMask groundLayer;
     int groundLayerInt;
     RaycastHit2D hit;
+    
 
     private void Awake()
     {
@@ -41,7 +45,7 @@ public class Tortoise : MonoBehaviour
         groundLayerInt = LayerMask.NameToLayer("Ground");
 
         groundedTime = 0f;
-
+        trailEmission = dustTrail.emission;
     }
 
     void Update()
@@ -67,7 +71,7 @@ public class Tortoise : MonoBehaviour
             }
 
             
-            rb.AddForceAtPosition(groundCheck.right * speed / 80f, groundCheck.position);
+            rb.AddForceAtPosition(groundCheck.right * speed / 50f, groundCheck.position);
         }
 
         hit = Physics2D.Raycast(groundCheck.position, -transform.up, 0.3f, groundLayer);
@@ -82,9 +86,10 @@ public class Tortoise : MonoBehaviour
         {
             //reset speed when hiding/unhiding
             speed = 0f;
+            trailEmission.rateOverDistance = isHiding ? 0f : 20f;
         }
 
-        animator.SetFloat("speed", Mathf.InverseLerp(.2f, 1f, (speed / maxSpeed))); //animation speed based on speed
+        animator.SetFloat("speed", Mathf.Lerp(0f, 5f, (speed / maxSpeed))); //animation speed based on speed
         animator.SetBool("isWalking", isWalking);
         animator.SetBool("isHiding", isHiding);
         target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
