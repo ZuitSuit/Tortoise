@@ -69,7 +69,7 @@ public class Tortoise : MonoBehaviour
         {
             if ((Input.GetKeyDown(KeyCode.Space)))
             {
-                speed = Mathf.Clamp(speed + 7f, 0f, maxSpeed);
+                speed = Mathf.Clamp(speed + 5f, 0f, maxSpeed);
             }
         }
 
