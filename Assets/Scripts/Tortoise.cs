@@ -34,13 +34,15 @@ public class Tortoise : MonoBehaviour
     RaycastHit2D hit;
     
 
+    
+
     private void Awake()
     {
         if(rb == null) rb = GetComponentInChildren<Rigidbody2D>();
-        yeetForce = 350f;
+        yeetForce = 1000f;
         yeetJuice = speed = 0f;
         yeetJuiceMax = maxSpeed = 100f;
-        yeetJuiceRecharge = 20f; // per second
+        yeetJuiceRecharge = 5f; // per second
         groundLayer = LayerMask.GetMask("Ground");
         groundLayerInt = LayerMask.NameToLayer("Ground");
 
@@ -69,12 +71,9 @@ public class Tortoise : MonoBehaviour
             {
                 speed = Mathf.Clamp(speed + 7f, 0f, maxSpeed);
             }
-
-            
-            rb.AddForceAtPosition(groundCheck.right * speed / 50f, groundCheck.position);
         }
 
-        hit = Physics2D.Raycast(groundCheck.position, -transform.up, 0.3f, groundLayer);
+        hit = Physics2D.Raycast(groundCheck.position, -transform.up, 0.6f, groundLayer);
         isGrounded = (hit.collider != null) && (hit.collider.gameObject.layer == groundLayerInt);
 
         groundedTime = (isGrounded ? groundedTime + Time.deltaTime: 0f);
@@ -122,16 +121,21 @@ public class Tortoise : MonoBehaviour
     {
         if (draggingTortoise)
         {
-            yeetJuice = Mathf.Clamp(yeetJuice - Time.deltaTime * 200f, 0f, yeetJuiceMax); //drain juice
+            yeetJuice = Mathf.Clamp(yeetJuice - Time.deltaTime * 50f, 0f, yeetJuiceMax); //drain juice
 
             yeetDirection = (target - (Vector2)transform.position).normalized;
-            rb.AddForceAtPosition(yeetDirection * Time.deltaTime * yeetForce * Mathf.Clamp(0f,4f,Vector2.Distance(transform.position, target)), dragPoint.transform.position);
+            rb.AddForceAtPosition(yeetDirection * Time.deltaTime * yeetForce * Mathf.Clamp(1f,4f,Vector2.Distance(transform.position, target)), dragPoint.transform.position);
             //rb.AddForce(yeetDirection * Time.deltaTime * yeetForce * Mathf.Clamp(0f, 4f, Vector2.Distance(transform.position, target)));
 
         }
         else
         {
             yeetJuice = Mathf.Clamp(yeetJuice += Time.deltaTime * yeetJuiceRecharge, 0f, yeetJuiceMax);
+        }
+
+        if (!isHiding)
+        {
+            rb.AddForceAtPosition(groundCheck.right * speed, groundCheck.position);
         }
     }
 
@@ -141,5 +145,15 @@ public class Tortoise : MonoBehaviour
         dragPoint.gameObject.SetActive(toggle);
     }
 
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Plant plant = collision.gameObject.GetComponent<Plant>();
+        if (plant != null)
+        {
+            plant.Eat();
+            yeetJuice = Mathf.Clamp((yeetJuice + plant.yeetJuice), 0f, yeetJuiceMax);
+        }
+    }
 
 }
