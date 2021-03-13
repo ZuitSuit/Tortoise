@@ -39,10 +39,10 @@ public class Tortoise : MonoBehaviour
     private void Awake()
     {
         if(rb == null) rb = GetComponentInChildren<Rigidbody2D>();
-        yeetForce = 1000f;
+        yeetForce = 350f;
         yeetJuice = speed = 0f;
         yeetJuiceMax = maxSpeed = 100f;
-        yeetJuiceRecharge = 5f; // per second
+        yeetJuiceRecharge = 6f; // per second
         groundLayer = LayerMask.GetMask("Ground");
         groundLayerInt = LayerMask.NameToLayer("Ground");
 
@@ -62,7 +62,7 @@ public class Tortoise : MonoBehaviour
                     Debug.Log(speed);
                 }*/
 
-        speed = Mathf.Clamp(speed - Time.deltaTime * (6f + 30f * speed/maxSpeed), 0f, maxSpeed);
+        speed = Mathf.Clamp(speed - Time.deltaTime * (4f + 20f * speed/maxSpeed), 0f, maxSpeed);
 
         //spam space to move
         if (!isHiding)
@@ -121,7 +121,7 @@ public class Tortoise : MonoBehaviour
     {
         if (draggingTortoise)
         {
-            yeetJuice = Mathf.Clamp(yeetJuice - Time.deltaTime * 50f, 0f, yeetJuiceMax); //drain juice
+            yeetJuice = Mathf.Clamp(yeetJuice - Time.deltaTime * 100f, 0f, yeetJuiceMax); //drain juice
 
             yeetDirection = (target - (Vector2)transform.position).normalized;
             rb.AddForceAtPosition(yeetDirection * Time.deltaTime * yeetForce * Mathf.Clamp(1f,4f,Vector2.Distance(transform.position, target)), dragPoint.transform.position);
@@ -135,7 +135,7 @@ public class Tortoise : MonoBehaviour
 
         if (!isHiding)
         {
-            rb.AddForceAtPosition(groundCheck.right * speed, groundCheck.position);
+            rb.AddForceAtPosition(groundCheck.right * speed/5f, groundCheck.position);
         }
     }
 
@@ -156,4 +156,8 @@ public class Tortoise : MonoBehaviour
         }
     }
 
+    public void SetSpeed(float sp)
+    {
+        speed = sp;
+    }
 }
