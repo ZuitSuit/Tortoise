@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
     bool timerActive, anyKeyFlag;
     float timer;
 
+    public Tortoise player;
+
     void Awake()
     {
         Instance = this;
@@ -59,11 +61,11 @@ public class GameManager : MonoBehaviour
         {
             word.SetActive(false);
         }
-
+        yield return new WaitForSeconds(.7f);
         foreach (GameObject word in words)
         {
             word.SetActive(true);
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(.7f);
         }
 
         anyKeyFlag = true;
@@ -76,14 +78,19 @@ public class GameManager : MonoBehaviour
 
     IEnumerator StartGame()
     {
+        
+
         while (!anyKeyFlag || !Input.anyKey)
         {
             yield return null;
         }
 
+        player.music.Play();
+        player.SetYeetJuice(20f);
         startScreen.SetActive(false);
         gameUI.SetActive(true);
         timerActive = true;
+        
     }
     IEnumerator GameEnd()
     {

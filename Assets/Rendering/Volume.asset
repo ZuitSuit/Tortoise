@@ -19,6 +19,65 @@ MonoBehaviour:
     m_Value: 0.1
     min: 0
     max: 1
+--- !u!114 &-1441455919370586124
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdfbdbb87d3286943a057f7791b43141, type: 3}
+  m_Name: ChannelMixer
+  m_EditorClassIdentifier: 
+  active: 1
+  m_AdvancedMode: 0
+  redOutRedIn:
+    m_OverrideState: 1
+    m_Value: 86
+    min: -200
+    max: 200
+  redOutGreenIn:
+    m_OverrideState: 0
+    m_Value: 0
+    min: -200
+    max: 200
+  redOutBlueIn:
+    m_OverrideState: 1
+    m_Value: -20
+    min: -200
+    max: 200
+  greenOutRedIn:
+    m_OverrideState: 0
+    m_Value: 0
+    min: -200
+    max: 200
+  greenOutGreenIn:
+    m_OverrideState: 0
+    m_Value: 100
+    min: -200
+    max: 200
+  greenOutBlueIn:
+    m_OverrideState: 0
+    m_Value: 0
+    min: -200
+    max: 200
+  blueOutRedIn:
+    m_OverrideState: 0
+    m_Value: 0
+    min: -200
+    max: 200
+  blueOutGreenIn:
+    m_OverrideState: 0
+    m_Value: 0
+    min: -200
+    max: 200
+  blueOutBlueIn:
+    m_OverrideState: 0
+    m_Value: 100
+    min: -200
+    max: 200
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34,8 +93,45 @@ MonoBehaviour:
   components:
   - {fileID: 1579493605348032292}
   - {fileID: 911778983064363222}
-  - {fileID: 6543633776043861409}
   - {fileID: -7582952582575273835}
+  - {fileID: 355443910821051521}
+  - {fileID: -1441455919370586124}
+--- !u!114 &355443910821051521
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 899c54efeace73346a0a16faa3afe726, type: 3}
+  m_Name: Vignette
+  m_EditorClassIdentifier: 
+  active: 1
+  m_AdvancedMode: 0
+  color:
+    m_OverrideState: 0
+    m_Value: {r: 0.103773594, g: 0.103773594, b: 0.103773594, a: 1}
+    hdr: 0
+    showAlpha: 0
+    showEyeDropper: 1
+  center:
+    m_OverrideState: 1
+    m_Value: {x: 0.5, y: 0.5}
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0.25
+    min: 0
+    max: 1
+  smoothness:
+    m_OverrideState: 1
+    m_Value: 0.818
+    min: 0.01
+    max: 1
+  rounded:
+    m_OverrideState: 0
+    m_Value: 0
 --- !u!114 &911778983064363222
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -76,72 +172,10 @@ MonoBehaviour:
   m_AdvancedMode: 0
   lift:
     m_OverrideState: 0
-    m_Value: {x: 1, y: 0.687327, z: 0.9722169, w: -0.021945976}
+    m_Value: {x: 1, y: 0.8235717, z: 0.9882437, w: -0.20167235}
   gamma:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 0.76455414, z: 0.9302316, w: -0.0073152874}
+    m_Value: {x: 0.93852, y: 0.8706101, z: 1, w: -0.06394491}
   gain:
-    m_OverrideState: 0
-    m_Value: {x: 0.51425326, y: 1, z: 0.61858755, w: -0.32918796}
---- !u!114 &6543633776043861409
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c01700fd266d6914ababb731e09af2eb, type: 3}
-  m_Name: DepthOfField
-  m_EditorClassIdentifier: 
-  active: 0
-  m_AdvancedMode: 0
-  mode:
     m_OverrideState: 1
-    m_Value: 2
-  gaussianStart:
-    m_OverrideState: 1
-    m_Value: 0
-    min: 0
-  gaussianEnd:
-    m_OverrideState: 1
-    m_Value: 1
-    min: 0
-  gaussianMaxRadius:
-    m_OverrideState: 1
-    m_Value: 1.5
-    min: 0.5
-    max: 1.5
-  highQualitySampling:
-    m_OverrideState: 0
-    m_Value: 0
-  focusDistance:
-    m_OverrideState: 1
-    m_Value: 9.77
-    min: 0.1
-  aperture:
-    m_OverrideState: 1
-    m_Value: 10.5
-    min: 1
-    max: 32
-  focalLength:
-    m_OverrideState: 1
-    m_Value: 130
-    min: 1
-    max: 300
-  bladeCount:
-    m_OverrideState: 1
-    m_Value: 5
-    min: 3
-    max: 9
-  bladeCurvature:
-    m_OverrideState: 1
-    m_Value: 1
-    min: 0
-    max: 1
-  bladeRotation:
-    m_OverrideState: 1
-    m_Value: -116
-    min: -180
-    max: 180
+    m_Value: {x: 1, y: 0.7513093, z: 0.78051424, w: 0.02459421}

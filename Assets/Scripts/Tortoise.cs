@@ -32,8 +32,8 @@ public class Tortoise : MonoBehaviour
     LayerMask groundLayer;
     int groundLayerInt;
     RaycastHit2D hit;
-    
 
+    public AudioSource music;
     
 
     private void Awake()
@@ -52,7 +52,7 @@ public class Tortoise : MonoBehaviour
 
     void Update()
     {
-
+        music.volume = Mathf.Lerp(.1f, .5f, Mathf.Clamp01(rb.velocity.x / 10f));
         //spam left right to move
         /*        axis = Input.GetButtonDown("Horizontal") ? Mathf.Sign(Input.GetAxis("Horizontal")) : 0;
                 if (!isHiding && (axis != 0) && (axis != lastAxis))
@@ -158,6 +158,11 @@ public class Tortoise : MonoBehaviour
 
     public void SetSpeed(float sp)
     {
-        speed = sp;
+        speed = Mathf.Clamp(sp, 0f, maxSpeed);
+    }
+
+    public void SetYeetJuice(float yj)
+    {
+        yeetJuice = Mathf.Clamp(yj, 0f, yeetJuiceMax);
     }
 }
