@@ -11,12 +11,19 @@ public class GameManager : MonoBehaviour
     public GameObject startScreen, endScreen, gameUI;
     public List<GameObject> words;
     public GameObject anyKeyPrompt;
-    public TextMeshProUGUI timerText, endTimerText;
+    public TextMeshProUGUI timerText, endTimerText, bestTimerText;
 
     bool timerActive, anyKeyFlag;
     float timer;
 
     public Tortoise player;
+
+
+    public AudioSource audioSource;
+    public List<AudioClip> titleWords;
+
+    public GameObject highScore;
+
 
     void Awake()
     {
@@ -62,9 +69,12 @@ public class GameManager : MonoBehaviour
             word.SetActive(false);
         }
         yield return new WaitForSeconds(.7f);
+        int wordIterator = 0;
         foreach (GameObject word in words)
         {
             word.SetActive(true);
+            audioSource.PlayOneShot(titleWords[wordIterator]);
+            wordIterator++;
             yield return new WaitForSeconds(.7f);
         }
 
@@ -87,6 +97,7 @@ public class GameManager : MonoBehaviour
 
         player.music.Play();
         player.SetYeetJuice(20f);
+        player.active = true;
         startScreen.SetActive(false);
         gameUI.SetActive(true);
         timerActive = true;
@@ -94,11 +105,30 @@ public class GameManager : MonoBehaviour
     }
     IEnumerator GameEnd()
     {
+        
+        if (!PlayerPrefs.HasKey("bestTime"))
+        {
+            PlayerPrefs.SetFloat("bestTime", timer);
+        }
+
+        float oldRecord = PlayerPrefs.GetFloat("bestTime");
+        
+        if (timer < oldRecord)
+        {
+            PlayerPrefs.SetFloat("bestTime", timer);
+            
+        }
+
+        highScore.SetActive(timer <= oldRecord);
+
+        PlayerPrefs.Save();
+
         gameUI.SetActive(false);
         timerActive = false;
         yield return new WaitForSeconds(2f);
 
         endScreen.SetActive(true);
+        bestTimerText.text = ((int)oldRecord / 3600).ToString("d2") + ":" + (((int)oldRecord % 3600) / 60).ToString("d2") + ":" + (((int)oldRecord % 3600) % 60).ToString("d2");
         endTimerText.text = ((int)timer / 3600).ToString("d2") + ":" + (((int)timer % 3600) / 60).ToString("d2") + ":" + (((int)timer % 3600) % 60).ToString("d2");
 
         yield return null;

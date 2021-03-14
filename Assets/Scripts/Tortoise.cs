@@ -34,11 +34,12 @@ public class Tortoise : MonoBehaviour
     RaycastHit2D hit;
 
     public AudioSource music;
-    
+    public bool active { get; set; }
 
     private void Awake()
     {
-        if(rb == null) rb = GetComponentInChildren<Rigidbody2D>();
+        active = false;
+        if (rb == null) rb = GetComponentInChildren<Rigidbody2D>();
         yeetForce = 350f;
         yeetJuice = speed = 0f;
         yeetJuiceMax = maxSpeed = 100f;
@@ -67,7 +68,7 @@ public class Tortoise : MonoBehaviour
         //spam space to move
         if (!isHiding)
         {
-            if ((Input.GetKeyDown(KeyCode.Space)))
+            if (Input.GetKeyDown(KeyCode.Space) && active)
             {
                 speed = Mathf.Clamp(speed + 5f, 0f, maxSpeed);
             }
